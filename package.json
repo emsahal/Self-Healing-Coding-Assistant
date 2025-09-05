@@ -1,0 +1,134 @@
+{
+  "name": "self-healing-assistant",
+  "displayName": "Self-Healing Coding Assistant",
+  "description": "AI-powered code fixing with n8n integration",
+  "version": "0.1.0",
+  "publisher": "your-publisher-name",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other",
+    "Linters",
+    "Formatters"
+  ],
+  "keywords": [
+    "ai",
+    "code-fixing",
+    "n8n",
+    "automation",
+    "debugging"
+  ],
+  "activationEvents": [
+    "onCommand:selfHealing.fixCode",
+    "onCommand:selfHealing.fixSelection"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "selfHealing.fixCode",
+        "title": "Fix Entire File with AI",
+        "category": "Self-Healing",
+        "icon": "$(wand)"
+      },
+      {
+        "command": "selfHealing.fixSelection",
+        "title": "Fix Selected Code with AI",
+        "category": "Self-Healing",
+        "icon": "$(lightbulb)"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "selfHealing.fixCode",
+          "when": "resourceExtname =~ /\\.(js|ts|py|java|cpp|c|go|php|cs|rb|swift|kt)$/",
+          "group": "2_workspace@1"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "selfHealing.fixCode",
+          "when": "editorTextFocus",
+          "group": "1_modification@1"
+        },
+        {
+          "command": "selfHealing.fixSelection",
+          "when": "editorHasSelection",
+          "group": "1_modification@2"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "selfHealing.fixCode",
+          "when": "resourceExtname =~ /\\.(js|ts|py|java|cpp|c|go|php|cs|rb|swift|kt)$/",
+          "group": "navigation@1"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "selfHealing.fixCode",
+        "key": "ctrl+shift+f",
+        "mac": "cmd+shift+f",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "selfHealing.fixSelection",
+        "key": "ctrl+shift+s",
+        "mac": "cmd+shift+s",
+        "when": "editorHasSelection"
+      }
+    ],
+    "configuration": {
+      "title": "Self-Healing Assistant",
+      "properties": {
+        "selfHealing.n8nWebhookUrl": {
+          "type": "string",
+          "default": "http://localhost:5678/webhook/fix-code",
+          "description": "n8n webhook endpoint URL for code fixing",
+          "pattern": "^https?://.+"
+        },
+        "selfHealing.showDiffPreview": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show diff preview before applying AI fixes"
+        },
+        "selfHealing.requestTimeout": {
+          "type": "number",
+          "default": 30000,
+          "minimum": 5000,
+          "maximum": 120000,
+          "description": "Request timeout in milliseconds"
+        },
+        "selfHealing.enableLogging": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable detailed logging for debugging"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.9.36",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
+}
